@@ -5,6 +5,8 @@ authors: [ukhan]
 tags: [python, azure-devops, pypi, package-management, devops]
 ---
 
+![](./image.png)
+
 ## Introduction
 Migrating private PyPI packages between Azure DevOps organizations may sound like a trivial task—until you realize you don’t have access to the source organization or the upstream feed.
 
