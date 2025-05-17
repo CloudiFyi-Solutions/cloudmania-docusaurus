@@ -130,7 +130,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} CloudMania Solutions - Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} CloudMania Solutions - Umar Khan`,
       },
       prism: {
         theme: prismThemes.github,
