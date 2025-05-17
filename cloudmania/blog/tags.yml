@@ -1,0 +1,44 @@
+terraform:
+  label: Terraform
+  permalink: /terraform
+  description: Terraform
+
+devops:
+  label: DevOps
+  permalink: /devops
+  description: devops
+
+ci/cd:
+  label: ci/cd
+  permalink: /cicd
+  description: Continuous Integration and Continuous Delivery
+
+automation:
+  label: Automation
+  permalink: /automation
+  description: automation
+
+azure:
+  label: Azure
+  permalink: /azure
+  description: Microsoft Azure Cloud Platform
+
+python:
+  label: Python
+  permalink: /python
+  description: Python programming language
+
+azure-devops:
+  label: Azure DevOps
+  permalink: /azure-devops
+  description: Azure DevOps pipelines, repos, and artifacts
+
+pypi:
+  label: PyPI
+  permalink: /pypi
+  description: Python Package Index and private package feeds
+
+package-management:
+  label: Package Management
+  permalink: /package-management
+  description: Managing and distributing software packages
