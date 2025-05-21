@@ -1,14 +1,14 @@
 ---
 slug: azure-ai
-title: Azure AI
+title: Azure Managed AI Services
 authors: [skhan]
 tags: [azure, devops, automation, ai, ai-foundry, ai-studio]
 ---
 <!-- truncate -->
 
-This is a blog on what is Azure AI is and what are the uses of Azure AI.
+Azure AI is Microsoft’s suite of cloud-based artificial intelligence services that makes it easy for developers and organizations to build intelligent applications — without needing to be AI experts.
 
-It also gives us an overview of the complete end-to-end archetectural setup from Azure prespective.
+It offers a wide range of tools and APIs to help you add capabilities like vision recognition, speech processing, language understanding, and machine learning to your apps with just a few lines of code.
 
 ## What is Azure AI?
 
