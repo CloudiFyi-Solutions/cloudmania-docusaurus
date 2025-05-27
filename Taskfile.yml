@@ -1,0 +1,39 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build the Docusaurus site
+    cmds:
+      - echo "Installing dependencies..."
+      - npm install
+      - echo "Building the Docusaurus site..."
+      - npm run build
+    sources:
+      - package.json
+      - package-lock.json
+      - src/**
+      - docs/**
+      - docusaurus.config.js
+    generates:
+      - build/**
+
+  serve:
+    desc: Serve the built Docusaurus site locally
+    deps: [build]
+    cmds:
+      - npx serve build
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf build
+
+  install:
+    desc: Install project dependencies
+    cmds:
+      - npm install
+
+  dev:
+    desc: Start Docusaurus in development mode
+    cmds:
+      - npm run start

@@ -35,3 +35,4 @@ package-lock.json
 
 # Optional: ignore blog drafts
 blog/**/draft-*
+.task/checksum/build
