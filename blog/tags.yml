@@ -42,3 +42,16 @@ package-management:
   label: Package Management
   permalink: /package-management
   description: Managing and distributing software packages
+
+ai:
+  label: ai
+  permalink: /ai 
+
+ai-foundry:
+  label: ai-foundry
+  permalink: /ai-foundry 
+
+ai-studio:
+  label: ai-studio
+  permalink: /ai-studio
+
