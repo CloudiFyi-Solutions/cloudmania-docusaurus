@@ -22,8 +22,10 @@ jobs:
       - name: Install Task
         run: |
             curl -sL https://taskfile.dev/install.sh | sh
+            mkdir -p $HOME/bin
+            mv ./bin/task $HOME/bin/
             echo "$HOME/bin" >> $GITHUB_PATH
-            export PATH="$HOME/bin:$PATH"
+            echo "PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
 
       - name: Run build with Taskfile
         run: |
