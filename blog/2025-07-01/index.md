@@ -9,9 +9,22 @@ tags: [azure, devops, automation, gcp, federated-identity, google-cloud]
 
 This guide walks through how to configure **Workload Identity Federation (WIF)** from **Azure DevOps to Google Cloud (GCP)**.
 
+## Permissions Required Across Platforms
+
+To execute the steps involving Azure DevOps and Google Cloud Platform (GCP) with Workload Identity Federation (WIF), you need specific permissions in both Azure and GCP.
+
 ---
 
-## High-Level Steps:
+| Platform     | Role / Permission                            | Purpose                                    |
+| ------------ | -------------------------------------------- | ------------------------------------------ |
+| Azure DevOps | Project Admin / Service Connection Admin     | Create and manage service connections      |
+| Azure AD     | Application Administrator                    | Register app for federated identity (OIDC) |
+| GCP IAM      | `iam.workloadIdentityPoolAdmin`              | Create WIF pool and provider               |
+| GCP IAM      | `iam.serviceAccountAdmin`                    | Create and manage service accounts         |
+| GCP IAM      | `iam.serviceAccountTokenCreator`             | Impersonate service accounts               |
+| GCP IAM      | `resourcemanager.projectIamAdmin` (optional) | Modify project-level IAM bindings          |
+
+## High-Level Steps
 
 1. Create Azure DevOps Service Connection with Federated Identity
 2. Create a Workload Identity Pool and Provider on GCP
@@ -21,13 +34,14 @@ This guide walks through how to configure **Workload Identity Federation (WIF)**
 
 ---
 
-## Step 1: Create Azure DevOps Service Connection with Federated Identity
+### Step 1: Create Azure DevOps Service Connection with Federated Identity
 
 - Go to your **Azure DevOps Project** ➝ `Project Settings` ➝ `Service Connections`
 - Click **New Service Connection** ➝ Choose **Azure Resource Manager**
 - Select **Workload Identity Federation**
 
 Fill in the required details:
+
 - **Tenant ID**
 - **Client ID** of your Azure App Registration (or Managed Identity)
 - Select the appropriate **Subscription**
@@ -35,12 +49,11 @@ Fill in the required details:
 Save the connection.  
 This creates the federated credential on the Azure side and exposes the **OIDC issuer URL** (e.g., `https://vstoken.dev.azure.com/<-->`)
 
-
-## Step 2: Create Workload Identity Pool and Provider on GCP
+### Step 2: Create Workload Identity Pool and Provider on GCP
 
 > You can do this via `gcloud` CLI, the GUI, or using Terraform.
 
-### Using `gcloud` CLI
+#### Using `gcloud` CLI
 
 ```bash
 gcloud iam workload-identity-pools create azuredevopspool \
@@ -55,7 +68,7 @@ gcloud iam workload-identity-pools providers create-oidc azureprovider \
   --attribute-mapping="insert attribute mapping here"
 ```
 
-### Using Terraform
+#### Using Terraform
 
 ```hcl
 resource "google_iam_workload_identity_pool" "pool" {
@@ -90,15 +103,15 @@ resource "google_iam_workload_identity_pool_provider" "azure_devops_organization
 
 ---
 
-## Step 3: Create Google Cloud Service Account
+### Step 3: Create Google Cloud Service Account
 
-### Using `gcloud` CLI
+#### Using `gcloud` CLI
 
 ```bash
 gcloud iam service-accounts create azuredevsc
 ```
 
-### Using Terraform
+#### Using Terraform
 
 ```hcl
 resource "google_service_account" "azure_devops_project" {
@@ -110,9 +123,9 @@ resource "google_service_account" "azure_devops_project" {
 
 ---
 
-## Step 4: Grant IAM Roles to the Service Account
+### Step 4: Grant IAM Roles to the Service Account
 
-### Using `gcloud` CLI
+#### Using `gcloud` CLI
 
 ```bash
 gcloud iam service-accounts add-iam-policy-binding azuredevsc@<project-id>.iam.gserviceaccount.com \
@@ -121,7 +134,7 @@ gcloud iam service-accounts add-iam-policy-binding azuredevsc@<project-id>.iam.g
   --member="principalSet://iam.googleapis.com/projects/<project-number>/locations/global/workloadIdentityPools/azuredevopspool/attribute.proj/<your-devops-org>/<your-devops-project>"
 ```
 
-### Using Terraform
+#### Using Terraform
 
 ```hcl
 resource "google_service_account_iam_member" "azure_devops_project_workload_identity_user_azure_devops_organization" {
@@ -139,7 +152,7 @@ resource "google_project_iam_member" "azure_devops_project_project_viewer" {
 
 ---
 
-## Step 5: Configure Azure DevOps Pipeline
+### Step 5: Configure Azure DevOps Pipeline
 
 Now that all permissions and credentials are in place, configure your Azure Pipeline to use the federated identity to authenticate with GCP.
 
