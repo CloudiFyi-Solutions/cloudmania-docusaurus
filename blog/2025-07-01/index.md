@@ -1,6 +1,6 @@
 ---
 slug: gcp-to-azure-devops-wif
-title: Azure to GCP connection
+title: Azure DevOps to GCP connection using WIF
 authors: [ukhan]
 tags: [azure, devops, automation, gcp, federated-identity, google-cloud]
 ---
@@ -33,18 +33,8 @@ Fill in the required details:
 - Select the appropriate **Subscription**
 
 Save the connection.  
-This creates the federated credential on the Azure side and exposes the **OIDC issuer URL** (e.g., `https://vstoken.actions.githubusercontent.com/<...>`)
+This creates the federated credential on the Azure side and exposes the **OIDC issuer URL** (e.g., `https://vstoken.dev.azure.com/<-->`)
 
-**Subject Format:**
-```
-sc://<org>/<project>
-```
-or
-```
-repo:<org>/<repo>:ref:refs/heads/<branch>
-```
-
----
 
 ## Step 2: Create Workload Identity Pool and Provider on GCP
 
