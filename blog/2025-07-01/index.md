@@ -1,7 +1,7 @@
 ---
 slug: gcp-to-azure-devops-wif
 title: Azure to GCP connection
-authors: [skhan]
+authors: [ukhan]
 tags: [azure, devops, automation, gcp, federated-identity, google-cloud]
 ---
 
