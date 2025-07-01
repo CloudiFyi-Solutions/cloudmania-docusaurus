@@ -5,8 +5,6 @@ authors: [ukhan]
 tags: [azure, devops, automation, gcp, federated-identity, google-cloud]
 ---
 
-# GCP to Azure DevOps Workload Identity Federation Setup
-
 This guide walks through how to configure **Workload Identity Federation (WIF)** from **Azure DevOps to Google Cloud (GCP)**.
 
 ## Permissions Required Across Platforms
