@@ -101,7 +101,9 @@ resource "google_iam_workload_identity_pool_provider" "azure_devops_organization
 
 ---
 
-### Step 3 (Direct resource access): Grant IAM viewer/editor/contributor role to the feredated identity ***skip to step 4 if using service account impersination**
+### Step 3 (Direct resource access): 
+
+- Grant IAM viewer/editor/contributor role to the feredated identity ***skip to step 4 if using service account impersination**
 
 #### Using `gcloud` CLI
 
@@ -121,7 +123,9 @@ resource "google_project_iam_member" "pool_editor" {
 }
 ```
 
-### Step 4 (service account impersination): Create Google Cloud Service Account ***skip this step if using step 3**
+### Step 4 (service account impersination):
+
+- Create Google Cloud Service Account ***skip this step if using step 3**
 
 #### Using `gcloud` CLI
 
@@ -141,7 +145,9 @@ resource "google_service_account" "azure_devops_project" {
 
 ---
 
-### Step 5 (service account impersination): Grant IAM Roles to the Service Account ***skip this step if using step 3**
+### Step 5 (service account impersination): 
+
+ - Grant IAM Roles to the Service Account ***skip this step if using step 3**
 
 #### Using `gcloud` CLI
 
