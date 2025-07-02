@@ -26,8 +26,8 @@ To execute the steps involving Azure DevOps and Google Cloud Platform (GCP) with
 
 1. Create Azure DevOps Service Connection with Federated Identity
 2. Create a Workload Identity Pool and Provider on GCP
-3. Create a Google Cloud Service Account
-4. Grant Roles to the Workload Identity Pool Principal
+3. Create a Google Cloud Service Account or grant access to the federated identity directly through IAM
+4. Grant Roles to the Workload Identity Pool Principal on the service account or directly through IAM.
 5. Configure Azure Pipeline to Use WIF
 
 ---
@@ -101,7 +101,27 @@ resource "google_iam_workload_identity_pool_provider" "azure_devops_organization
 
 ---
 
-### Step 3: Create Google Cloud Service Account
+### Step 3 (Direct resource access): Grant IAM viewer/editor/contributor role to the feredated identity ***skip to step 4 if using service account impersination**
+
+#### Using `gcloud` CLI
+
+```bash
+gcloud projects add-iam-policy-binding <GCP_PROJECT_ID> \
+  --member="principal://iam.googleapis.com/projects/<GCP_PROJECT_ID>/locations/global/workloadIdentityPools/<YOUR_WOKRLOAD_IDENTITY_POOL_NAME>/subject/sc://<AZURE_DEVOPS_ORG>/<AZURE_DEVOPS_PROJECT_NAME>/<AZURE_DEVOPS_SERVICE_CONN_NAME>" \
+  --role="roles/editor"
+```
+
+#### Using Terraform
+
+```hcl
+resource "google_project_iam_member" "pool_editor" {
+  project = var.project_id
+  role    = "roles/editor"
+  member  = "principal://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}/subject/sc://${var.azure_devops_organization_name}/${var.azure_devops_project_name}/${var.azure_devops_service_connection_name}"
+}
+```
+
+### Step 4 (service account impersination): Create Google Cloud Service Account ***skip this step if using step 3**
 
 #### Using `gcloud` CLI
 
@@ -121,7 +141,7 @@ resource "google_service_account" "azure_devops_project" {
 
 ---
 
-### Step 4: Grant IAM Roles to the Service Account
+### Step 5 (service account impersination): Grant IAM Roles to the Service Account ***skip this step if using step 3**
 
 #### Using `gcloud` CLI
 
@@ -150,7 +170,7 @@ resource "google_project_iam_member" "azure_devops_project_project_viewer" {
 
 ---
 
-### Step 5: Configure Azure DevOps Pipeline
+### Step 6: Configure Azure DevOps Pipeline
 
 Now that all permissions and credentials are in place, configure your Azure Pipeline to use the federated identity to authenticate with GCP.
 
@@ -174,8 +194,10 @@ variables:
   value: your-workload-identity-pool
 - name: GoogleCloud.WorkloadIdentity.Provider
   value: your-workload-identity-provider
+###---Omit if using direct resource access i.e step 3---###
 - name: GoogleCloud.WorkloadIdentity.ServiceAccount
   value: your-service-account@gcp-project-name.iam.gserviceaccount.com
+###-----------------------------------------------------###
 - name: GOOGLE_APPLICATION_CREDENTIALS
   value: $(Pipeline.Workspace)/.workload_identity.wlconfig
 
@@ -187,6 +209,7 @@ steps:
       addSpnToEnvironment: true
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
+      ###----Omit "service_account_impersonation_url" if using direct resource access i.e step 3------###
       inlineScript: |
         echo $idToken > $(Pipeline.Workspace)/.workload_identity.jwt
         cat << EOF > $GOOGLE_APPLICATION_CREDENTIALS
